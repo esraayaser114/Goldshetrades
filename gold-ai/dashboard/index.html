@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Gold Gann AI</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: #e5e7eb;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 30px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.title {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.subtitle {
+    color: #94a3b8;
+    margin-top: 5px;
+}
+
+.status {
+    padding: 10px 16px;
+    border-radius: 20px;
+    background: #14532d;
+    color: #bbf7d0;
+}
+
+.signal-card {
+    background: #1e293b;
+    border-radius: 18px;
+    padding: 30px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.signal {
+    font-size: 48px;
+    font-weight: bold;
+    margin: 20px;
+}
+
+.buy {
+    color: #22c55e;
+}
+
+.sell {
+    color: #ef4444;
+}
+
+.no-trade {
+    color: #f59e0b;
+}
+
+.price {
+    font-size: 28px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+.card {
+    background: #1e293b;
+    padding: 22px;
+    border-radius: 16px;
+}
+
+.label {
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+.value {
+    font-size: 24px;
+    margin-top: 8px;
+    font-weight: bold;
+}
+
+.targets {
+    margin-top: 20px;
+}
+
+.target {
+    background: #334155;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+}
+
+button {
+    background: #2563eb;
+    color: white;
+    border: 0;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+.loading {
+    color: #94a3b8;
+}
+
+.error {
+    color: #ef4444;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <div>
+            <div class="title">
+                GOLD GANN AI
+            </div>
+
+            <div class="subtitle">
+                XAU/USD 5-Minute AI Trading System
+            </div>
+        </div>
+
+        <div
+            id="status"
+            class="status"
+        >
+            ONLINE
+        </div>
+
+    </div>
+
+
+    <div class="signal-card">
+
+        <div class="label">
+            CURRENT SIGNAL
+        </div>
+
+        <div
+            id="signal"
+            class="signal no-trade"
+        >
+            Loading...
+        </div>
+
+        <div
+            id="price"
+            class="price"
+        >
+            -
+        </div>
+
+        <div
+            id="time"
+            class="subtitle"
+        >
+            -
+        </div>
+
+    </div>
+
+
+    <div class="grid">
+
+        <div class="card">
+
+            <div class="label">
+                ML Confidence
+            </div>
+
+            <div
+                id="confidence"
+                class="value"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="label">
+                Gann Direction
+            </div>
+
+            <div
+                id="gann"
+                class="value"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="label">
+                Entry
+            </div>
+
+            <div
+                id="entry"
+                class="value"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="label">
+                Stop Loss
+            </div>
+
+            <div
+                id="stop"
+                class="value"
+            >
+                -
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="targets"
+        class="card targets"
+        style="margin-top:20px;"
+    >
+
+        <div class="label">
+            TARGETS
+        </div>
+
+        <div id="target-list">
+            -
+        </div>
+
+    </div>
+
+
+    <div
+        class="card"
+        style="margin-top:20px;"
+    >
+
+        <div class="label">
+            SIGNAL REASON
+        </div>
+
+        <div
+            id="reason"
+            class="value"
+        >
+            -
+        </div>
+
+    </div>
+
+
+    <div
+        class="card"
+        style="margin-top:20px;"
+    >
+
+        <div class="label">
+            BACKTEST
+        </div>
+
+        <div
+            class="grid"
+            style="margin-top:15px;"
+        >
+
+            <div>
+                <div class="label">
+                    Trades
+                </div>
+
+                <div
+                    id="trades"
+                    class="value"
+                >
+                    -
+                </div>
+            </div>
+
+            <div>
+                <div class="label">
+                    Win Rate
+                </div>
+
+                <div
+                    id="winrate"
+                    class="value"
+                >
+                    -
+                </div>
+            </div>
+
+            <div>
+                <div class="label">
+                    Net R
+                </div>
+
+                <div
+                    id="netr"
+                    class="value"
+                >
+                    -
+                </div>
+            </div>
+
+            <div>
+                <div class="label">
+                    Profit Factor
+                </div>
+
+                <div
+                    id="pf"
+                    class="value"
+                >
+                    -
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div style="margin-top:25px;">
+
+        <button onclick="loadAll()">
+            Refresh
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+async function getSignal() {
+
+    const response =
+        await fetch("/api/signal");
+
+    if (!response.ok) {
+
+        throw new Error(
+            "Signal API failed"
+        );
+
+    }
+
+    return response.json();
+}
+
+
+async function getBacktest() {
+
+    const response =
+        await fetch("/api/backtest");
+
+    if (!response.ok) {
+
+        throw new Error(
+            "Backtest API failed"
+        );
+
+    }
+
+    return response.json();
+}
+
+
+function showSignal(data) {
+
+    const signal =
+        document.getElementById("signal");
+
+    signal.innerText =
+        data.signal || "NO TRADE";
+
+    signal.className =
+        "signal " +
+        (
+            data.signal === "BUY"
+                ? "buy"
+                : data.signal === "SELL"
+                ? "sell"
+                : "no-trade"
+        );
+
+
+    document.getElementById("price")
+        .innerText =
+        data.latest_price
+            ? Number(data.latest_price).toFixed(5)
+            : "-";
+
+
+    document.getElementById("time")
+        .innerText =
+        data.latest_time || "-";
+
+
+    document.getElementById("confidence")
+        .innerText =
+        data.confidence !== undefined
+            ? (
+                Number(data.confidence) * 100
+            ).toFixed(2) + "%"
+            : "-";
+
+
+    document.getElementById("gann")
+        .innerText =
+        data.gann_direction || "-";
+
+
+    document.getElementById("entry")
+        .innerText =
+        data.entry !== undefined
+            ? data.entry
+            : "-";
+
+
+    document.getElementById("stop")
+        .innerText =
+        data.stop !== undefined
+            ? data.stop
+            : "-";
+
+
+    document.getElementById("reason")
+        .innerText =
+        data.reason || "Signal generated";
+
+
+    const list =
+        document.getElementById("target-list");
+
+    list.innerHTML = "";
+
+
+    if (
+        data.targets &&
+        data.targets.length
+    ) {
+
+        data.targets.forEach(
+            (target, index) => {
+
+                const div =
+                    document.createElement("div");
+
+                div.className = "target";
+
+                div.innerText =
+                    "TP" +
+                    (index + 1) +
+                    ": " +
+                    target;
+
+                list.appendChild(div);
+
+            }
+        );
+
+    } else {
+
+        list.innerText =
+            "No targets - NO TRADE";
+
+    }
+
+}
+
+
+function showBacktest(data) {
+
+    document.getElementById("trades")
+        .innerText =
+        data.trades ?? "-";
+
+
+    document.getElementById("winrate")
+        .innerText =
+        data.win_rate !== undefined
+            ? data.win_rate + "%"
+            : "-";
+
+
+    document.getElementById("netr")
+        .innerText =
+        data.net_r !== undefined
+            ? data.net_r + "R"
+            : "-";
+
+
+    document.getElementById("pf")
+        .innerText =
+        data.profit_factor ?? "-";
+
+}
+
+
+async function loadAll() {
+
+    try {
+
+        document.getElementById("status")
+            .innerText =
+            "LOADING";
+
+
+        const [
+            signal,
+            backtest
+        ] = await Promise.all([
+            getSignal(),
+            getBacktest()
+        ]);
+
+
+        showSignal(signal);
+        showBacktest(backtest);
+
+
+        document.getElementById("status")
+            .innerText =
+            "ONLINE";
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        document.getElementById("status")
+            .innerText =
+            "ERROR";
+
+        document.getElementById("signal")
+            .innerText =
+            "API ERROR";
+
+    }
+
+}
+
+
+loadAll();
+
+
+// Refresh every 60 seconds.
+setInterval(
+    loadAll,
+    60000
+);
+
+</script>
+
+</body>
+
+</html>

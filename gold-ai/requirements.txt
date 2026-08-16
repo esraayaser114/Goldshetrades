@@ -1,0 +1,10 @@
+pandas
+numpy
+requests
+websocket-client
+python-dotenv
+sqlalchemy
+matplotlib
+scikit-learn
+xgboost
+lightgbm
