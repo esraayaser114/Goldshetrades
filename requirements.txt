@@ -9,4 +9,4 @@ scikit-learn
 xgboost
 lightgbm
 streamlit
-plotly
+plotly>=6.0.0
